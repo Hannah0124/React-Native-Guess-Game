@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   number: {
     color: Colors.accent,
-    fontSize: 22
+    fontSize: 22,
   }
 });
 
