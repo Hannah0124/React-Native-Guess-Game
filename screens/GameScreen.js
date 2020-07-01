@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 
 import NumberContainer from '../components/NumberContainer';
@@ -17,15 +17,25 @@ const generateRandomBetween = (min, max, exclude) => {
 
 const GameScreen = props => {
   const [currentGuess, setCurrentGuess] = useState(
-    generateRandomBetween(1, 100, props.userChoice)
+    generateRandomBetween(1, 100, userChoice)
   );
+
+  const [rounds, setRounds] = useState(0);
 
   const currentLow = useRef(1); // useRef => the component will not re-render!
   const currentHigh = useRef(100);
 
+  const { userChoice, onGameOver } = props; // destructuring
+
+  useEffect(() => {
+    if (currentGuess === userChoice) {
+      onGameOver(rounds);
+    }
+  }, [currentGuess, userChoice, onGameOver]);
+
   const nextGuessHandler = direction => {
     // validation
-    if ((direction === 'lower' && currentGuess < props.userChoice) || (direction === 'greater' && currentGuess > props.userChoice)) {
+    if ((direction === 'lower' && currentGuess < userChoice) || (direction === 'greater' && currentGuess > userChoice)) {
       Alert.alert(
         'Don\'t lie!', 
         'You know that this is wrong...', 
@@ -43,6 +53,8 @@ const GameScreen = props => {
     const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess);
 
     setCurrentGuess(nextNumber); // The component will re-render!
+
+    setRounds(currentRounds => currentRounds + 1); // increment by 1
 
   };
 
