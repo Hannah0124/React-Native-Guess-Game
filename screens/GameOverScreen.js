@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, Image } from 'react-native';
 import BodyText from '../components/BodyText';
+import MainButton from '../components/MainButton';
+import Colors from '../constants/colors';
 
 const GameOverScreen = props => {
   return (
@@ -9,17 +11,23 @@ const GameOverScreen = props => {
       <View style={styles.imageContainer}>
         <Image 
           fadeDuration={300}
-          // source={require('../assets/success.png')} 
-          source={{uri: 'https://cdn.dribbble.com/users/4851961/screenshots/10129725/dribble2_4x.jpg?compress=1&resize=1200x900'}}
+          source={require('../assets/success.png')} 
+          // source={{uri: 'https://cdn.dribbble.com/users/4851961/screenshots/10129725/dribble2_4x.jpg?compress=1&resize=1200x900'}}
           style={styles.image}
           resizeMode="cover"
         />
       </View>
       {/* resizeMode: cover (default) => keeps image ratio */}
 
-      <BodyText>Number of rounds: {props.roundsNumber}</BodyText>
-      <BodyText>Number was: {props.userNumber}</BodyText>
-      <Button title="NEW GAME" onPress={props.onRestart} />
+      <View style={styles.resultContainer}>
+        <BodyText style={styles.resultText}>
+          Your phone needed{' '}
+          <Text style={styles.highlight}> {props.roundsNumber} </Text>
+          rounds to guess the number{' '}
+          <Text style={styles.highlight}> {props.userNumber}</Text>
+        </BodyText>
+      </View>
+      <MainButton onPress={props.onRestart}>NEW GAME</MainButton>
     </View>
   );
 };
@@ -42,6 +50,18 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },
+  resultContainer: {
+    marginHorizontal: 80,
+    marginBottom: 20,
+    fontSize: 20
+  },
+  resultText: {
+    textAlign: 'center'
+  },
+  highlight: {
+    color: Colors.primary,
+    fontFamily: 'open-sans-bold'
   }
 });
 
