@@ -3,7 +3,7 @@
     "name": "rn-guess-game",
     "slug": "rn-guess-game",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default", // portrait, landscape, default (both mode)
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",

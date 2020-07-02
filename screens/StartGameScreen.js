@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -7,7 +7,9 @@ import {
   TouchableWithoutFeedback, 
   Keyboard,
   Alert,
-  Dimensions 
+  Dimensions,
+  ScrollView,
+  KeyboardAvoidingView  // For the landscape issue
 } from 'react-native';
 
 import Card from '../components/Card';
@@ -23,7 +25,9 @@ const StartGameScreen = props => {
   const [enteredValue, setEnteredValue] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
+  const [buttonWidth, setButtonWidth] = useState(Dimensions.get('window').width / 4);
 
+  
   const numberInputHandler = inputText => {
     setEnteredValue(inputText.replace(/[^0-9]/g, ''));
   };
@@ -32,6 +36,18 @@ const StartGameScreen = props => {
     setEnteredValue('');
     setConfirmed(false);
   };
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setButtonWidth(Dimensions.get('window').width / 4);
+    }
+    // listener 
+    Dimensions.addEventListener('change', updateLayout); // update the new one
+    return () => {
+      Dimensions.removeEventListener('change', updateLayout); // clean up the old one
+
+    };
+  });
 
   const confirmInputHandler = () => {
     const chosenNumber = parseInt(enteredValue);
@@ -71,36 +87,44 @@ const StartGameScreen = props => {
 
 
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      Keyboard.dismiss(); // dismiss the keyboard when clicking on somewhere else
-    }}>
-      <View style={styles.screen}>
-        <TitleText style={styles.title}>Start a New Game!</TitleText>
-        <Card style={styles.inputContainer}>
-          <BodyText>Select a Number</BodyText>
-          <Input 
-            style={styles.input} 
-            blurOnSubmit // When clicking on the check box, the number buttons disappear!
-            autoCapitalize='none'
-            autoCorrect={false}
-            // keyboardType='numeric'
-            keyboardType='number-pad'
-            maxLength={2}
-            onChangeText={numberInputHandler}
-            value={enteredValue}
-          />
-          <View style={styles.buttonContainer}>
-            <View style={styles.button}>
-              <Button title="Reset" onPress={resetInputHandler} color={Colors.accent} />
-            </View>
-            <View style={styles.button}>
-              <Button title="Confirm" onPress={confirmInputHandler} color={Colors.primary} />
-            </View>
+    <ScrollView>
+      {/* Never overlays the input you type in */}
+      {/* behavior types: padding, position, height */}
+      <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={30}> 
+        <TouchableWithoutFeedback onPress={() => {
+          Keyboard.dismiss(); // dismiss the keyboard when clicking on somewhere else
+        }}>
+          <View style={styles.screen}>
+            <TitleText style={styles.title}>Start a New Game!</TitleText>
+            <Card style={styles.inputContainer}>
+              <BodyText>Select a Number</BodyText>
+              <Input 
+                style={styles.input} 
+                blurOnSubmit // When clicking on the check box, the number buttons disappear!
+                autoCapitalize='none'
+                autoCorrect={false}
+                // keyboardType='numeric'
+                keyboardType='number-pad'
+                maxLength={2}
+                onChangeText={numberInputHandler}
+                value={enteredValue}
+              />
+              <View style={styles.buttonContainer}>
+                {/* <View style={styles.button}> */}
+                <View style={{width: buttonWidth}}>
+                  <Button title="Reset" onPress={resetInputHandler} color={Colors.accent} />
+                </View>
+                {/* <View style={styles.button}> */}
+                <View style={{width: buttonWidth}}>
+                  <Button title="Confirm" onPress={confirmInputHandler} color={Colors.primary} />
+                </View>
+              </View>
+            </Card>
+            {confirmedOutput}
           </View>
-        </Card>
-        {confirmedOutput}
-      </View>
-    </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -133,7 +157,7 @@ const styles = StyleSheet.create({
   },
   button: {
     // width: 100
-    width: Dimensions.get('window').width / 4
+    width: Dimensions.get('window').width / 4 // This only calculates when the app starts, so, when the phone screen rotates, it doesn't fit.
     // width: '40%'
   },
   input: {
