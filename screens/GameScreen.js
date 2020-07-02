@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // icon package
 
+// If the import below doesn't work:
+// expo install expo-screen-orientation 
+import * as ScreenOrientation from 'expo-screen-orientation';
+
 import NumberContainer from '../components/NumberContainer';
 import Card from '../components/Card';
 import MainButton from '../components/MainButton';
@@ -46,6 +50,9 @@ const renderListItem = (listLength, itemData) => ( // The first argument is the 
 );
 
 const GameScreen = props => {
+  // As soon as the game starts, the orientation doesn't change any more
+  // ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
+
   const initialGuess = generateRandomBetween(1, 100, userChoice);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
 
