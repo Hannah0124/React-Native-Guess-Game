@@ -6,7 +6,8 @@ import {
   Button, 
   TouchableWithoutFeedback, 
   Keyboard,
-  Alert 
+  Alert,
+  Dimensions 
 } from 'react-native';
 
 import Card from '../components/Card';
@@ -115,8 +116,13 @@ const styles = StyleSheet.create({
     fontFamily: 'open-sans-bold'
   },
   inputContainer: {
-    width: 300,
-    maxWidth: '80%',
+    // width: 300,
+    // maxWidth: '80%',
+
+    // for small phones
+    maxWidth: '95%',
+    width: '80%',
+    minWidth: 300,
     alignItems: 'center'
   },
   buttonContainer: {
@@ -126,8 +132,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15
   },
   button: {
+    // width: 100
+    width: Dimensions.get('window').width / 4
     // width: '40%'
-    width: 100
   },
   input: {
     width: 50,
